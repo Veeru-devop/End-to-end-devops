@@ -2,33 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: three-tier
-  labels:
-    role: frontend
-    env: demo
-spec: 
-  replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 25%
+  namespace: dev
+spec:
+  replicas: 3
   selector:
-    matchLabels: 
-      role: frontend
+    matchLabels:
+      app: frontend
   template:
     metadata:
       labels:
-        role: frontend
-    spec: 
-      imagePullSecrets:
-      - name: ecr-registry-secret
+        app: frontend
+    spec:
       containers:
-      - name: frontend
-        image: 407622020962.dkr.ecr.us-east-1.amazonaws.com/frontend:3
-        imagePullPolicy: Always
-        env:
-          - name: REACT_APP_BACKEND_URL
-            value: "http://amanpathakdevops.study/api/tasks"
+      - name: frontend-container
+        image: three-tier-frontend:1  # Updated to match your built image
         ports:
-        - containerPort: 3000
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
